@@ -9,6 +9,11 @@ export default function App() {
   const [tipPercent, setTipPercent] = useState(0);
   const [tipFriendPercent, setTipFriendPercent] = useState(0);
   const averageTip = Math.round(((tipPercent + tipFriendPercent) / 200) * bill);
+  const handleToggleReset = function () {
+    setBill("");
+    setTipPercent(0);
+    setTipFriendPercent(0);
+  };
 
   return (
     <div>
@@ -26,11 +31,7 @@ export default function App() {
       {bill > 0 ? (
         <>
           <Output tip={averageTip} bill={bill} />
-          <Reset
-            onSetBill={setBill}
-            onSetTipPercent={setTipPercent}
-            onSetTipFriendPercent={setTipFriendPercent}
-          />
+          <Reset onToggleReset={handleToggleReset} />
         </>
       ) : (
         ""
