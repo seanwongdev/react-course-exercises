@@ -28,7 +28,11 @@ const initialFriends = [
 export default function App() {
   const [friends, setFriends] = useState(initialFriends);
   const [selectedFriend, setSelectedFriend] = useState(null);
-  const [showFormBill, setShowFormBill] = useState(false);
+  const [showFriendForm, setShowFriendForm] = useState(false);
+
+  const handleToggleForm = function () {
+    setShowFriendForm((showFriendForm) => !showFriendForm);
+  };
 
   const handleUpdateBalance = function (value) {
     setFriends((friends) =>
@@ -41,8 +45,8 @@ export default function App() {
   };
 
   const handleSelectedFriend = function (friend) {
-    setSelectedFriend(friend);
-    setShowFormBill((showFormBill) => !showFormBill);
+    setSelectedFriend((current) => (current?.id === friend.id ? null : friend));
+    setShowFriendForm(false);
   };
 
   return (
@@ -51,11 +55,15 @@ export default function App() {
         <FriendsList
           friends={friends}
           onSelectedFriend={handleSelectedFriend}
+          selectedFriend={selectedFriend}
         />
-        <FormAddFriend />
-        <Button>Add friend</Button>;
+        {showFriendForm && <FormAddFriend />}
+        <Button onClick={handleToggleForm}>
+          {showFriendForm ? "Close" : "Add friend"}
+        </Button>
+        ;
       </div>
-      {showFormBill && (
+      {selectedFriend && (
         <FormSplitBill
           onUpdateBalance={handleUpdateBalance}
           selectedFriend={selectedFriend}
