@@ -49,6 +49,10 @@ export default function App() {
     setShowFriendForm(false);
   };
 
+  const handleAddFriend = function (friend) {
+    setFriends((friends) => [...friends, friend]);
+  };
+
   return (
     <div className="app">
       <div className="sidebar">
@@ -57,7 +61,7 @@ export default function App() {
           onSelectedFriend={handleSelectedFriend}
           selectedFriend={selectedFriend}
         />
-        {showFriendForm && <FormAddFriend />}
+        {showFriendForm && <FormAddFriend onAddFriend={handleAddFriend} />}
         <Button onClick={handleToggleForm}>
           {showFriendForm ? "Close" : "Add friend"}
         </Button>
