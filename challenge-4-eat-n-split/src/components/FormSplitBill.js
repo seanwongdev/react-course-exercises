@@ -1,11 +1,7 @@
 import { useState } from "react";
 import Button from "./Button";
 
-export default function FormSplitBill({
-  selectedFriend,
-  onBalanceOwed,
-  onUpdateBalance,
-}) {
+export default function FormSplitBill({ selectedFriend, onUpdateBalance }) {
   const [bill, setBill] = useState("");
   const [billByUser, setBillByUser] = useState("");
   const billByFriend = bill ? bill - billByUser : "";
@@ -14,8 +10,8 @@ export default function FormSplitBill({
   const handleSplitBill = function (e) {
     e.preventDefault();
     if (!bill) return;
-    paidByUser ? onBalanceOwed(billByFriend) : onBalanceOwed(-billByUser);
-    onUpdateBalance();
+    const value = paidByUser ? billByFriend : -billByUser;
+    onUpdateBalance(value);
   };
 
   return (

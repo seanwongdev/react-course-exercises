@@ -29,13 +29,12 @@ export default function App() {
   const [friends, setFriends] = useState(initialFriends);
   const [selectedFriend, setSelectedFriend] = useState(null);
   const [showFormBill, setShowFormBill] = useState(false);
-  const [balanceOwed, setBalanceOwed] = useState("");
 
-  const handleUpdateBalance = function () {
+  const handleUpdateBalance = function (value) {
     setFriends((friends) =>
       friends.map((friend) =>
         friend.id === selectedFriend.id
-          ? { ...friend, balance: friend.balance + Number(balanceOwed) }
+          ? { ...friend, balance: friend.balance + Number(value) }
           : friend
       )
     );
@@ -59,7 +58,6 @@ export default function App() {
       {showFormBill && (
         <FormSplitBill
           onUpdateBalance={handleUpdateBalance}
-          onBalanceOwed={setBalanceOwed}
           selectedFriend={selectedFriend}
         />
       )}
