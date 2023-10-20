@@ -6,15 +6,27 @@ export default function App() {
   const [currencyFrom, setCurrencyFrom] = useState("USD");
   const [currencyTo, setCurrencyTo] = useState("USD");
   const [amount, setAmount] = useState("23");
+  const [result, setResult] = useState("");
 
   useEffect(
     function () {
       async function convertExchange() {
-        const res = await fetch(
-          `https://api.frankfurter.app/latest?amount=${amount}&from=${currencyFrom}&to=${currencyTo}`
-        );
-        const data = res.json();
-        console.log(data);
+        try {
+          const res = await fetch(
+            `https://api.frankfurter.app/latest?amount=${amount}&from=${currencyFrom}&to=${currencyTo}`
+          );
+          console.log(res);
+          if (!res.ok)
+            throw new Error(
+              "Currency To should be different from Currency From"
+            );
+          const data = await res.json();
+
+          console.log(data);
+          setResult(data.rates[currencyTo]);
+        } catch (err) {
+          setResult(err.message);
+        }
       }
       convertExchange();
     },
@@ -29,7 +41,7 @@ export default function App() {
         setCurrencySelect={setCurrencyFrom}
       />
       <Currency currencySelect={currencyTo} setCurrencySelect={setCurrencyTo} />
-      <Output />
+      <Output result={result} />
     </div>
   );
 }
@@ -48,8 +60,8 @@ function Currency({ currencySelect, setCurrencySelect }) {
   );
 }
 
-function Output() {
-  return <p>output</p>;
+function Output({ result }) {
+  return <p>{result}</p>;
 }
 
 function Amount({ amount, setAmount }) {
