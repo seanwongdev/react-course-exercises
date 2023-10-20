@@ -11,27 +11,32 @@ export default function App() {
 
   useEffect(
     function () {
-      async function convertExchange() {
-        try {
-          setIsLoading(true);
-          const res = await fetch(
-            `https://api.frankfurter.app/latest?amount=${amount}&from=${currencyFrom}&to=${currencyTo}`
-          );
-          console.log(res);
-          if (!res.ok) throw new Error("Fetching went wrong");
-          const data = await res.json();
+      const delayFetching = setTimeout(() => {
+        async function convertExchange() {
+          try {
+            setIsLoading(true);
+            const res = await fetch(
+              `https://api.frankfurter.app/latest?amount=${amount}&from=${currencyFrom}&to=${currencyTo}`
+            );
+            console.log(res);
+            if (!res.ok) throw new Error("Fetching went wrong");
+            const data = await res.json();
 
-          console.log(data);
-          setResult(data.rates[currencyTo]);
-        } catch (err) {
-          setResult(err.message);
-        } finally {
-          setIsLoading(false);
+            console.log(data);
+            setResult(data.rates[currencyTo]);
+          } catch (err) {
+            setResult(err.message);
+          } finally {
+            setIsLoading(false);
+          }
         }
-      }
-      if (currencyFrom === currencyTo) return setResult(amount);
-      convertExchange();
+        if (currencyFrom === currencyTo) return setResult(amount);
+        convertExchange();
+      }, 1500);
+
+      return () => clearTimeout(delayFetching);
     },
+
     [amount, currencyFrom, currencyTo]
   );
 
