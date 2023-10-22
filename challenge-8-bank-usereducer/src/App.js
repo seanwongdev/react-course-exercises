@@ -1,3 +1,4 @@
+import { useReducer } from "react";
 import "./styles.css";
 
 /*
@@ -24,40 +25,77 @@ const initialState = {
   isActive: false,
 };
 
+const DEPOSIT_FIXED = 150;
+const WITHDRAW_FIXED = 50;
+const LOAN = 5000;
+
+function reducer(state, action) {
+  switch (action.type) {
+    case "openAccount":
+      return { ...state, isActive: true, balance: 500 };
+    case "deposit":
+      return { ...state, balance: state.balance + DEPOSIT_FIXED };
+    case "withdraw":
+      return { ...state, balance: state.balance - WITHDRAW_FIXED };
+    case "requestLoan":
+      return {
+        ...state,
+        balance: state.loan ? state.balance : state.balance + LOAN,
+        loan: state.loan ? state.loan : LOAN,
+      };
+    default:
+      throw new Error("Action Unknown");
+  }
+}
+
 export default function App() {
+  const [{ loan, balance, isActive }, dispatch] = useReducer(
+    reducer,
+    initialState
+  );
+
   return (
     <div className="App">
       <h1>useReducer Bank Account</h1>
-      <p>Balance: X</p>
-      <p>Loan: X</p>
+      <p>Balance: {balance}</p>
+      <p>Loan: {loan}</p>
 
       <p>
-        <button onClick={() => {}} disabled={false}>
+        <button
+          onClick={() => dispatch({ type: "openAccount" })}
+          disabled={isActive}
+        >
           Open account
         </button>
       </p>
       <p>
-        <button onClick={() => {}} disabled={false}>
+        <button
+          onClick={() => dispatch({ type: "deposit" })}
+          disabled={!isActive}
+        >
           Deposit 150
         </button>
       </p>
       <p>
-        <button onClick={() => {}} disabled={false}>
+        <button
+          onClick={() => dispatch({ type: "withdraw" })}
+          disabled={!isActive}
+        >
           Withdraw 50
         </button>
       </p>
       <p>
-        <button onClick={() => {}} disabled={false}>
+        <button onClick={() => {}} disabled={!isActive}>
           Request a loan of 5000
         </button>
       </p>
       <p>
-        <button onClick={() => {}} disabled={false}>
+        <button onClick={() => {}} disabled={!isActive}>
           Pay loan
         </button>
       </p>
       <p>
-        <button onClick={() => {}} disabled={false}>
+        <button onClick={() => {}} disabled={!isActive}>
           Close account
         </button>
       </p>
